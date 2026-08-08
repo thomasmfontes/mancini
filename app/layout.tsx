@@ -11,9 +11,9 @@ export const metadata: Metadata = {
     description: "Tradição italiana e coração paulistano desde 1980.",
     type: "website",
     locale: "pt_BR",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Famiglia Mancini — Uma noite na Avanhandava" }],
+    images: [{ url: "/og-v2.png", width: 1728, height: 910, alt: "Famiglia Mancini — Uma noite na Avanhandava" }],
   },
-  twitter: { card: "summary_large_image", images: ["/og.png"] },
+  twitter: { card: "summary_large_image", images: ["/og-v2.png"] },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

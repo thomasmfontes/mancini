@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 
 const MAP_URL = "https://www.google.com/maps/place/?q=place_id:ChIJfadx80xYzpQRyHnuTnmQmDA";
 const MENU_URL = "https://cdn.me-qr.com/pdf/12607344.pdf?time=1712690862";
+const RESERVATION_EMAIL = "reservas@famigliamancini.com.br";
 
 const images = {
   hero: "https://static.wixstatic.com/media/490ec2_81f87db962ff430082c249a4da7a63b8~mv2.jpg/v1/fill/w_2200,h_1320,al_c,q_92,enc_avif,quality_auto/490ec2_81f87db962ff430082c249a4da7a63b8~mv2.jpg",
@@ -27,9 +28,9 @@ const artGallery = [
 ];
 
 const foodCards = [
-  { image: images.antepasti, eyebrow: "O ritual da casa", title: "Mesa de antepastos", text: "Mais de 70 opções entre receitas italianas, queijos, embutidos, conservas e sabores preparados para você compor o início da experiência." },
-  { image: images.penne, eyebrow: "Dal mare", title: "Penne com frutos do mar", text: "Massas generosas para compartilhar, molhos feitos com tempo e ingredientes que celebram a tradição italiana." },
-  { image: images.canelone, eyebrow: "Della famiglia", title: "Canelone Fiorentina", text: "Receitas afetivas servidas em porções abundantes — como manda a mesa de uma verdadeira famiglia." },
+  { image: images.antepasti, eyebrow: "O ritual da casa", title: "Mesa de antepastos", text: "Mais de 70 opções fazem desta sala uma experiência gastronômica rica em sabores antes mesmo do prato principal." },
+  { image: images.penne, eyebrow: "Dal mare", title: "Penne com frutos do mar", text: "Um dos clássicos do acervo da casa, servido com a generosidade que acompanha a Famiglia desde 1980." },
+  { image: images.canelone, eyebrow: "Della famiglia", title: "Canelone Fiorentina", text: "Massas clássicas e porções generosas, preparadas para atender a duas ou mais pessoas e serem compartilhadas à mesa." },
 ];
 
 const houses = [
@@ -64,7 +65,7 @@ const houses = [
     menu: "https://cdn.me-qr.com/pdf/12607404.pdf?time=1712578858",
     image: "https://static.wixstatic.com/media/490ec2_ecc9a658c243493c9c5915c7c8e22416~mv2.jpg/v1/fill/w_1500,h_1100,al_c,q_90,enc_avif,quality_auto/490ec2_ecc9a658c243493c9c5915c7c8e22416~mv2.jpg",
     logo: "https://static.wixstatic.com/media/490ec2_9ef96e888e7b44c9b38c63667c6fdbbc~mv2.png/v1/fill/w_560,h_245,al_c,q_90,enc_avif,quality_auto/490ec2_9ef96e888e7b44c9b38c63667c6fdbbc~mv2.png",
-    description: "Fundada em 2004, a Pizzaria cativa seus visitantes com uma decoração lúdica e encantadora. Seus três ambientes evocam uma autêntica cantina italiana: salão de entrada, sala de antepastos e forno, além de um salão com visão para o palco e pequeno terraço voltado à Rua Avanhandava. O cardápio oferece pizzas, antepastos e diversos pratos da culinária italiana.",
+    description: "Fundada em 2004, a Pizzaria cativa seus visitantes com uma decoração lúdica e encantadora. Com três ambientes, proporciona uma experiência diversificada: um charmoso salão de entrada, evocando a atmosfera de uma autêntica cantina italiana; no primeiro piso, encontram-se a sala de antepastos e a área do forno, enquanto o segundo piso oferece um espaçoso salão com uma excelente visão do palco e um pequeno terraço, com vista para a Rua Avanhandava. Seu cardápio oferece pizzas, antepastos e diversos pratos da culinária italiana, garantindo uma experiência gastronômica completa para todos os paladares.",
   },
 ];
 
@@ -77,30 +78,66 @@ export default function Home() {
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [houseIndex, setHouseIndex] = useState(0);
   const [party, setParty] = useState(2);
-  const [clock, setClock] = useState(new Date());
+  const [clock, setClock] = useState<Date | null>(null);
   const [reserveOpen, setReserveOpen] = useState(false);
   const [sent, setSent] = useState(false);
+  const [reservationLink, setReservationLink] = useState(`mailto:${RESERVATION_EMAIL}`);
 
   useEffect(() => {
+    setClock(new Date());
     const id = window.setInterval(() => setClock(new Date()), 30000);
     return () => window.clearInterval(id);
   }, []);
 
-  const wait = useMemo(() => {
+  useEffect(() => {
+    if (!reserveOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setReserveOpen(false);
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [reserveOpen]);
+
+  const service = useMemo(() => {
+    if (!clock) return { isOpen: null, wait: 0, closingLabel: "" };
     const hour = clock.getHours() + clock.getMinutes() / 60;
     const day = clock.getDay();
+    const closingHour = day >= 4 && day <= 6 ? 24 : 23;
+    const isOpen = hour >= 11.5 && hour < closingHour;
     let base = 8;
     if (hour >= 12 && hour < 15) base = day === 0 || day === 6 ? 34 : 22;
     if (hour >= 18 && hour < 19.5) base = 28;
-    if (hour >= 19.5 && hour < 22) base = day >= 4 || day === 0 ? 52 : 38;
-    if (hour >= 22 || hour < 11.5) base = 0;
-    return base ? base + Math.max(0, party - 2) * 4 : 0;
+    if (hour >= 19.5 && hour < 22.5) base = day >= 4 || day === 0 ? 52 : 38;
+    if (hour >= 22.5) base = 18;
+    return {
+      isOpen,
+      wait: isOpen ? base + Math.max(0, party - 2) * 4 : 0,
+      closingLabel: closingHour === 24 ? "00h" : "23h",
+    };
   }, [clock, party]);
-
-  const open = wait > 0;
 
   function handleReservation(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const subject = "Solicitação de reserva — Famiglia Mancini";
+    const body = [
+      "Olá, equipe Famiglia Mancini!",
+      "",
+      "Gostaria de solicitar uma reserva com as seguintes preferências:",
+      `Nome: ${form.get("name")}`,
+      `Data: ${form.get("date")}`,
+      `Horário: ${form.get("time")}`,
+      `Pessoas: ${form.get("guests")}`,
+      `Telefone: ${form.get("phone")}`,
+      `E-mail: ${form.get("email")}`,
+      "",
+      "Aguardo a confirmação de disponibilidade. Obrigado!",
+    ].join("\n");
+    setReservationLink(`mailto:${RESERVATION_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
     setSent(true);
   }
 
@@ -132,13 +169,14 @@ export default function Home() {
           <h1>Uma noite<br />na <em>Avanhandava.</em></h1>
           <p className="hero-intro">Cozinha italiana generosa, música e histórias compartilhadas no endereço mais encantador do centro de São Paulo.</p>
           <div className="hero-actions">
-            <button className="button primary" onClick={() => setReserveOpen(true)}>Consultar fila <ArrowIcon /></button>
-            <a className="button ghost" href={MENU_URL} target="_blank" rel="noreferrer">Ver cardápio</a>
+            <a className="button primary" href="#fila">Consultar fila <ArrowIcon /></a>
+            <button className="button ghost" onClick={() => setReserveOpen(true)}>Solicitar reserva</button>
+            <a className="hero-menu-link" href={MENU_URL} target="_blank" rel="noreferrer">Cardápio ↗</a>
           </div>
         </div>
         <div className="hero-status" aria-label="Informações rápidas">
-          <span className={open ? "status-dot" : "status-dot closed"} />
-          <div><small>Hoje</small><strong>{open ? "Aberto até 00h" : "Abre às 11h30"}</strong></div>
+          <span className={service.isOpen ? "status-dot" : "status-dot closed"} />
+          <div><small>Hoje</small><strong>{service.isOpen === null ? "Consultando horário" : service.isOpen ? `Aberto até ${service.closingLabel}` : "Abre às 11h30"}</strong></div>
           <div className="status-divider" />
           <div><small>Endereço</small><strong>R. Avanhandava, 81</strong></div>
         </div>
@@ -152,7 +190,7 @@ export default function Home() {
           <h2>Quarenta e seis anos<br />à mesa de São Paulo.</h2>
         </div>
         <div className="story-copy">
-          <p className="dropcap">A Famiglia Mancini Trattoria nasceu em 10 de maio de 1980 e se tornou a casa tradicional do Grupo Mancini — um lugar onde a fartura italiana encontrou o jeito paulistano de celebrar.</p>
+          <p className="dropcap">Fundada em maio de 1980, a Famiglia Mancini Trattoria é a casa tradicional do Grupo Mancini — um lugar onde a fartura italiana encontrou o jeito paulistano de celebrar.</p>
           <p>Ao longo das décadas, mais de 15 milhões de pessoas atravessaram suas portas. Ambientes ricamente decorados, a fonte no salão e pratos pensados para duas ou mais pessoas transformam cada visita em memória.</p>
           <div className="story-facts">
             <div><strong>1980</strong><span>o começo de tudo</span></div>
@@ -240,13 +278,13 @@ export default function Home() {
           <p className="kicker">Il tuo tavolo</p>
           <h2>Planeje sua<br /><em>experiência.</em></h2>
           <p>Consulte uma estimativa dinâmica antes de sair de casa ou envie uma solicitação de reserva para nossa equipe.</p>
-          <small>Estimativa atualizada às {clock.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}. O tempo real pode variar conforme a operação.</small>
+          <small>Prévia atualizada às {clock ? clock.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : "--:--"}. Na versão final, este componente se conecta ao sistema operacional de fila da casa.</small>
         </div>
         <div className="queue-card">
-          <div className="queue-head"><span className="live-pill"><i /> AO VIVO</span><span>Famiglia Mancini · Avanhandava, 81</span></div>
+          <div className="queue-head"><span className="live-pill"><i /> PRÉVIA INTERATIVA</span><span>Famiglia Mancini · Avanhandava, 81</span></div>
           <div className="queue-main">
-            <div><small>Espera estimada agora</small><strong>{wait ? `${wait}–${wait + 15}` : "—"}</strong><span>{wait ? "minutos" : "fora do horário"}</span></div>
-            <div className="queue-gauge"><i style={{ width: `${Math.min(100, Math.max(8, wait * 1.45))}%` }} /></div>
+            <div><small>Espera estimada agora</small><strong>{service.wait ? `${service.wait}–${service.wait + 15}` : "—"}</strong><span>{service.wait ? "minutos" : "fora do horário"}</span></div>
+            <div className="queue-gauge"><i style={{ width: `${Math.min(100, Math.max(0, service.wait * 1.45))}%` }} /></div>
           </div>
           <label htmlFor="party">Quantas pessoas?</label>
           <div className="party-selector">
@@ -258,6 +296,7 @@ export default function Home() {
             <button className="button primary" onClick={() => setReserveOpen(true)}>Solicitar reserva <ArrowIcon /></button>
             <a href="tel:+551132556599">Ligar agora</a>
           </div>
+          <p className="queue-demo-note">Demonstração com dados ilustrativos até a integração com a operação da casa.</p>
         </div>
       </section>
 
@@ -290,7 +329,7 @@ export default function Home() {
           <p className="kicker">Arte na Avanhandava</p>
           <h2>Calligraphia</h2>
           <p className="art-lead">Loja de arte e galeria.</p>
-          <p>Na Rua Avanhandava, 40, a Calligraphia prolonga o passeio com um acervo singular. Um espaço onde objetos, formas e obras dialogam com a atmosfera criativa da rua.</p>
+          <p>Arte, presentes, antiguidades e papelaria em um espaço único na Rua Avanhandava.</p>
           <div className="art-meta"><span><small>Endereço</small>R. Avanhandava, 40</span><span><small>Telefone</small>(11) 3151-6477</span></div>
         </div>
       </section>
@@ -308,7 +347,7 @@ export default function Home() {
           <p className="hours-note">Horários sujeitos a alteração em feriados.</p>
         </div>
         <div className="map-wrap">
-          <iframe title="Mapa da Famiglia Mancini Trattoria" loading="lazy" src="https://www.google.com/maps?q=Famiglia+Mancini+Trattoria,+Rua+Avanhandava,+81,+São+Paulo&output=embed" referrerPolicy="no-referrer-when-downgrade" />
+          <iframe title="Mapa da Famiglia Mancini Trattoria" loading="lazy" src="https://www.google.com/maps?q=place_id:ChIJfadx80xYzpQRyHnuTnmQmDA&output=embed" referrerPolicy="no-referrer-when-downgrade" />
           <a className="map-card" href={MAP_URL} target="_blank" rel="noreferrer"><span>−23.550347, −46.645050</span><strong>Abrir no Google Maps <ArrowIcon /></strong></a>
         </div>
       </section>
@@ -337,7 +376,7 @@ export default function Home() {
                 <label>E-mail<input name="email" required type="email" placeholder="voce@email.com" /></label>
                 <button className="button primary" type="submit">Enviar solicitação <ArrowIcon /></button>
               </form>
-            </> : <div className="success-state"><span>✓</span><p className="kicker">Richiesta ricevuta</p><h2>Grazie!</h2><p>Sua preferência foi registrada nesta experiência. Para confirmação imediata, fale com a equipe Mancini.</p><a className="button primary" href="mailto:reservas@famigliamancini.com.br?subject=Solicitação de reserva — Famiglia Mancini">Continuar por e-mail <ArrowIcon /></a><a href="tel:+551132556599">ou ligue (11) 3255-6599</a></div>}
+            </> : <div className="success-state"><span>✓</span><p className="kicker">Messaggio pronto</p><h2>Quase lá!</h2><p>Preparamos sua solicitação com todas as preferências. Abra seu e-mail para enviar a mensagem; a reserva só estará confirmada após o retorno da equipe.</p><a className="button primary" href={reservationLink}>Abrir e-mail preenchido <ArrowIcon /></a><a href="tel:+551132556599">ou ligue (11) 3255-6599</a></div>}
           </section>
         </div>
       )}
