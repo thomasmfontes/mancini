@@ -32,6 +32,42 @@ const foodCards = [
   { image: images.canelone, eyebrow: "Della famiglia", title: "Canelone Fiorentina", text: "Receitas afetivas servidas em porções abundantes — como manda a mesa de uma verdadeira famiglia." },
 ];
 
+const houses = [
+  {
+    name: "Famiglia Mancini",
+    subtitle: "La casa tradizionale · dal 1980",
+    address: "R. Avanhandava, 81",
+    phone: "(11) 3256-4320",
+    phoneHref: "tel:+551132564320",
+    menu: "https://cdn.me-qr.com/pdf/12607344.pdf?time=1712690862",
+    image: images.polpetone,
+    logo: "https://static.wixstatic.com/media/490ec2_2e52071ad0f64dc6aec448a5beb9c67f~mv2.png/v1/fill/w_500,h_492,al_c,q_90,enc_avif,quality_auto/logo%20mancini_medalhao.png",
+    description: "A Famiglia Mancini Trattoria, fundada em maio de 1980, é a casa tradicional do Grupo Mancini. Ao longo das décadas, mais de 15 milhões de pessoas foram recebidas em seus ambientes, que são ricamente decorados e contam com uma fonte em seu interior. Os pratos, reconhecidos por suas porções generosas, são servidos para atender a duas ou mais pessoas. Além disso, a Trattoria dispõe de uma sala de antepastos com mais de 70 opções.",
+  },
+  {
+    name: "Il Ristorante",
+    subtitle: "Sofisticação com vista · dal 2001",
+    address: "R. Avanhandava, 126",
+    phone: "(11) 3258-8510",
+    phoneHref: "tel:+551132588510",
+    menu: "https://cdn.me-qr.com/pdf/12607216.pdf?time=1712578944",
+    image: "https://static.wixstatic.com/media/490ec2_00ea69ed610041f8bd49e5a3bff52f9f~mv2.jpg/v1/fill/w_1500,h_1100,al_c,q_90,enc_avif,quality_auto/490ec2_00ea69ed610041f8bd49e5a3bff52f9f~mv2.jpg",
+    logo: "https://static.wixstatic.com/media/490ec2_dd5a8193dea44fdc9fd8217170a4f65d~mv2.png/v1/fill/w_500,h_252,al_c,q_90,enc_avif,quality_auto/il_ristorante_logo2.png",
+    description: "Com uma atmosfera acolhedora e um toque de sofisticação, o Il Ristorante, inaugurado em 2001, oferece uma experiência gastronômica única, com vista para a encantadora Rua Avanhandava. Seu cardápio inclui carnes, peixes, massas e uma mesa de antepastos com mais de 40 itens. Todos os pratos são servidos de forma individual. À noite, durante o jantar, temos música ao vivo sem interrupções.",
+  },
+  {
+    name: "Pizza, Pasta & Música",
+    subtitle: "Uma cantina lúdica · dal 2004",
+    address: "R. Avanhandava, 37",
+    phone: "(11) 3231-0033",
+    phoneHref: "tel:+551132310033",
+    menu: "https://cdn.me-qr.com/pdf/12607404.pdf?time=1712578858",
+    image: "https://static.wixstatic.com/media/490ec2_ecc9a658c243493c9c5915c7c8e22416~mv2.jpg/v1/fill/w_1500,h_1100,al_c,q_90,enc_avif,quality_auto/490ec2_ecc9a658c243493c9c5915c7c8e22416~mv2.jpg",
+    logo: "https://static.wixstatic.com/media/490ec2_9ef96e888e7b44c9b38c63667c6fdbbc~mv2.png/v1/fill/w_560,h_245,al_c,q_90,enc_avif,quality_auto/490ec2_9ef96e888e7b44c9b38c63667c6fdbbc~mv2.png",
+    description: "Fundada em 2004, a Pizzaria cativa seus visitantes com uma decoração lúdica e encantadora. Seus três ambientes evocam uma autêntica cantina italiana: salão de entrada, sala de antepastos e forno, além de um salão com visão para o palco e pequeno terraço voltado à Rua Avanhandava. O cardápio oferece pizzas, antepastos e diversos pratos da culinária italiana.",
+  },
+];
+
 function ArrowIcon() {
   return <span aria-hidden="true" className="arrow-icon">↗</span>;
 }
@@ -39,6 +75,7 @@ function ArrowIcon() {
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
+  const [houseIndex, setHouseIndex] = useState(0);
   const [party, setParty] = useState(2);
   const [clock, setClock] = useState(new Date());
   const [reserveOpen, setReserveOpen] = useState(false);
@@ -76,6 +113,7 @@ export default function Home() {
         <nav className={menuOpen ? "nav-links open" : "nav-links"} aria-label="Navegação principal">
           <a href="#storia" onClick={() => setMenuOpen(false)}>La storia</a>
           <a href="#sapori" onClick={() => setMenuOpen(false)}>Sapori</a>
+          <a href="#casas" onClick={() => setMenuOpen(false)}>Le case</a>
           <a href="#avanhandava" onClick={() => setMenuOpen(false)}>Avanhandava</a>
           <a href="#calligraphia" onClick={() => setMenuOpen(false)}>Calligraphia</a>
           <a href="#visite" onClick={() => setMenuOpen(false)}>Visite</a>
@@ -145,6 +183,39 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="houses section relative overflow-hidden" id="casas">
+        <div className="houses-heading">
+          <div>
+            <p className="kicker light">Conheça nossas casas na Avanhandava</p>
+            <h2>Três maneiras de<br />viver a <em>Famiglia.</em></h2>
+          </div>
+          <p>Da mesa farta da Trattoria à sofisticação do Il Ristorante e à atmosfera lúdica da Pizzaria. Uma rua, três experiências com a mesma hospitalidade.</p>
+        </div>
+        <div className="house-tabs grid" role="tablist" aria-label="Casas do Grupo Mancini">
+          {houses.map((house, index) => (
+            <button key={house.name} role="tab" aria-selected={houseIndex === index} className={houseIndex === index ? "active" : ""} onClick={() => setHouseIndex(index)}>
+              <span>0{index + 1}</span>{house.name}
+            </button>
+          ))}
+        </div>
+        <article className="house-showcase">
+          <div className="house-image">
+            <img src={houses[houseIndex].image} alt={`Gastronomia do ${houses[houseIndex].name}`} loading="lazy" />
+            <span>{houses[houseIndex].subtitle}</span>
+          </div>
+          <div className="house-content">
+            <img className="house-logo" src={houses[houseIndex].logo} alt={houses[houseIndex].name} loading="lazy" />
+            <h3>{houses[houseIndex].name}</h3>
+            <p>{houses[houseIndex].description}</p>
+            <div className="house-contact">
+              <span><small>Endereço</small>{houses[houseIndex].address}</span>
+              <a href={houses[houseIndex].phoneHref}><small>Telefone</small>{houses[houseIndex].phone}</a>
+            </div>
+            <a className="button house-menu" href={houses[houseIndex].menu} target="_blank" rel="noreferrer">Ver cardápio <ArrowIcon /></a>
+          </div>
+        </article>
+      </section>
+
       <section className="street section" id="avanhandava">
         <div className="street-copy">
           <div className="section-number">02</div>
@@ -190,6 +261,27 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="occasions section bg-[#f7f2e9]" id="experiencias">
+        <div className="occasions-heading">
+          <p className="kicker">Mais motivos para celebrar</p>
+          <h2>A Avanhandava<br /><em>além da mesa.</em></h2>
+        </div>
+        <div className="occasion-grid grid">
+          <article className="occasion-card event-card">
+            <img src="https://static.wixstatic.com/media/490ec2_34ef86821ca24edca53d954bf8514280~mv2.jpg/v1/fill/w_1500,h_1000,al_c,q_90,enc_avif,quality_auto/490ec2_34ef86821ca24edca53d954bf8514280~mv2.jpg" alt="Evento na Rua Avanhandava" loading="lazy" />
+            <div><span>01 · Celebre</span><h3>Faça seu evento<br />na Avanhandava</h3><p>Casamento, aniversário, confraternização ou evento corporativo: o Grupo Mancini conta com o ambiente ideal para a sua ocasião.</p><a href="mailto:reservas@famigliamancini.com.br?subject=Evento na Avanhandava">Planejar evento <ArrowIcon /></a></div>
+          </article>
+          <article className="occasion-card gift-card">
+            <div className="gift-visual"><img src="https://static.wixstatic.com/media/490ec2_806b661af2e94609986edb03f1a39942~mv2.png/v1/fill/w_560,h_455,al_c,q_90,enc_avif,quality_auto/gift.png" alt="Gift Card Famiglia Mancini" loading="lazy" /></div>
+            <div><span>02 · Presenteie</span><h3>Gift Card<br />Famiglia Mancini</h3><p>Ofereça momentos especiais em nossos restaurantes. Escolha o valor e surpreenda alguém com uma experiência inesquecível.</p><a href="mailto:reservas@famigliamancini.com.br?subject=Gift Card Famiglia Mancini">Quero presentear <ArrowIcon /></a></div>
+          </article>
+          <article className="occasion-card delivery-card">
+            <div className="delivery-mark">PIZZA<br /><i>a casa</i></div>
+            <div><span>03 · Delivery</span><h3>Deguste nossas<br />pizzas em casa</h3><p>Delivery diariamente, das 18h às 23h, pela Keeta.</p><a href="https://url-eu.mykeeta.com/Sn65C7Fz" target="_blank" rel="noreferrer">Pedir agora <ArrowIcon /></a></div>
+          </article>
+        </div>
+      </section>
+
       <section className="calligraphia section" id="calligraphia">
         <div className="art-grid" aria-label="Galeria Calligraphia">
           {artGallery.map((src, index) => <img key={src} src={src} alt={`Acervo da Calligraphia — obra ${index + 1}`} loading="lazy" />)}
@@ -224,7 +316,7 @@ export default function Home() {
       <footer>
         <div className="footer-top">
           <div><p className="footer-script">Ci vediamo presto!</p><p>Reservas e informações</p><a href="mailto:reservas@famigliamancini.com.br">reservas@famigliamancini.com.br</a><a href="tel:+551132556599">(11) 3255-6599</a></div>
-          <div className="footer-links"><a href="#storia">História</a><a href="#sapori">Gastronomia</a><a href="#avanhandava">Avanhandava</a><a href="#calligraphia">Calligraphia</a><a href={MENU_URL} target="_blank" rel="noreferrer">Cardápio</a></div>
+          <div className="footer-links"><a href="#storia">História</a><a href="#sapori">Gastronomia</a><a href="#casas">Nossas casas</a><a href="#avanhandava">Avanhandava</a><a href="#calligraphia">Calligraphia</a><a href={MENU_URL} target="_blank" rel="noreferrer">Cardápio</a></div>
           <div className="footer-social"><span>Siga a Famiglia</span><a href="https://www.instagram.com/famigliamancini_oficial" target="_blank" rel="noreferrer">Instagram ↗</a><a href="https://www.tiktok.com/@famigliamancini" target="_blank" rel="noreferrer">TikTok ↗</a></div>
         </div>
         <div className="footer-bottom"><span>© {new Date().getFullYear()} Famiglia Mancini</span><span>Tradição italiana, coração paulistano.</span><a href="https://www.famigliamancini.com.br/transpar%C3%AAncia" target="_blank" rel="noreferrer">Transparência e Igualdade</a></div>
