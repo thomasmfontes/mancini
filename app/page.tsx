@@ -406,16 +406,23 @@ export default function Home() {
           <div className="service-grid">
             <article className="status-card" aria-live="polite">
               <div className="card-top"><span><i className={service.isOpen ? "status-dot" : "status-dot closed"} />AGORA EM SÃO PAULO</span><small>Atualizado às {service.time}</small></div>
-              <strong>{service.isOpen ? "Aberto" : "Fechado"}</strong>
-              <p>{service.isOpen ? `Atendimento até ${service.closingLabel}. A espera varia ao longo da noite; confirme com a equipe antes de vir.` : "A casa abre às 11h30. Você já pode preparar sua solicitação de reserva."}</p>
-              <label htmlFor="party-size">Tamanho do grupo</label>
-              <div className="party-selector" id="party-size">
-                <button type="button" onClick={() => setParty(Math.max(1, party - 1))} aria-label="Diminuir número de pessoas">−</button>
-                <strong>{party}<small>{party === 1 ? " pessoa" : " pessoas"}</small></strong>
-                <button type="button" onClick={() => setParty(Math.min(12, party + 1))} aria-label="Aumentar número de pessoas">+</button>
+              <div className="status-card-body">
+                <div className="status-overview">
+                  <span>Atendimento de hoje</span>
+                  <strong>{service.isOpen ? "Aberto" : "Fechado"}</strong>
+                  <p>{service.isOpen ? `Atendimento até ${service.closingLabel}. A espera varia ao longo da noite; confirme com a equipe antes de vir.` : "A casa abre às 11h30. Você já pode preparar sua solicitação de reserva."}</p>
+                </div>
+                <div className="queue-panel">
+                  <label htmlFor="party-size">Tamanho do grupo</label>
+                  <div className="party-selector" id="party-size">
+                    <button type="button" onClick={() => setParty(Math.max(1, party - 1))} aria-label="Diminuir número de pessoas">−</button>
+                    <strong>{party}<small>{party === 1 ? " pessoa" : " pessoas"}</small></strong>
+                    <button type="button" onClick={() => setParty(Math.min(12, party + 1))} aria-label="Aumentar número de pessoas">+</button>
+                  </div>
+                  <a className="button button-gold" href="tel:+551132556599">Ligar e consultar</a>
+                  <p className="honesty-note">A estimativa de espera depende da operação da casa e é confirmada por telefone.</p>
+                </div>
               </div>
-              <a className="button button-wine" href="tel:+551132556599">Ligar e consultar</a>
-              <p className="honesty-note">A estimativa de espera depende da operação da casa e é confirmada por telefone.</p>
             </article>
             <article className="reservation-card">
               <span>Reserva de mesas</span>

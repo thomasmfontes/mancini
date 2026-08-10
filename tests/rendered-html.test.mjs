@@ -46,6 +46,8 @@ test("mantém integrações, acervo e requisitos de conversão", async () => {
   assert.match(page, /ChIJfadx80xYzpQRyHnuTnmQmDA/);
   assert.match(page, /12607344\.pdf/);
   assert.match(page, /AGORA EM SÃO PAULO/);
+  assert.match(page, /className="status-card-body"/);
+  assert.match(page, /className="queue-panel"/);
   assert.match(page, /A estimativa de espera depende da operação da casa/);
   assert.match(page, /Deguste nossas pizzas em casa/);
   assert.match(page, /Diariamente, das 18h às 23h/);
