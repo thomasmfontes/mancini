@@ -161,7 +161,11 @@ export default function Home() {
     const closeOnDesktop = () => {
       if (window.innerWidth > 980) setMenuOpen(false);
     };
-    const focusFrame = window.requestAnimationFrame(() => menuRef.current?.querySelector<HTMLAnchorElement>("a")?.focus());
+    const focusFrame = window.requestAnimationFrame(() => {
+      if (!menuRef.current) return;
+      menuRef.current.scrollTop = 0;
+      menuRef.current.querySelector<HTMLAnchorElement>('a[href^="#"]')?.focus({ preventScroll: true });
+    });
     document.body.classList.add("menu-is-open");
     window.addEventListener("keydown", closeOnEscape);
     window.addEventListener("resize", closeOnDesktop);
@@ -267,10 +271,19 @@ export default function Home() {
       <a className="skip-link" href="#conteudo">Ir para o conteúdo</a>
 
       <header className="site-header">
-        <a className="brand-logo" href="#inicio" aria-label="Famiglia Mancini — início">
+        <a className="brand-logo" href="#inicio" aria-label="Famiglia Mancini — início" onClick={() => setMenuOpen(false)}>
           <img src={brand.logo} width="202" height="73" alt="Famiglia Mancini" />
         </a>
+        <button
+          className={menuOpen ? "menu-scrim open" : "menu-scrim"}
+          type="button"
+          aria-label="Fechar menu"
+          aria-hidden={!menuOpen}
+          tabIndex={-1}
+          onClick={() => setMenuOpen(false)}
+        />
         <nav className={menuOpen ? "nav-links open" : "nav-links"} aria-label="Navegação principal" id="site-navigation" ref={menuRef}>
+          <div className="mobile-menu-meta"><span>Navegação</span><small>Rua Avanhandava, 81</small></div>
           {[
             ["História", "#historia"],
             ["Trattoria", "#trattoria"],

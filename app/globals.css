@@ -42,7 +42,7 @@ h1, h2, h3, p { margin-top: 0; }
 .nav-links a:hover::after { right: 0; }
 .header-cta, .mobile-reserve { border: 0; min-height: 44px; padding: 0 18px; color: #fff; background: var(--wine); cursor: pointer; font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
 .header-cta { justify-self: end; }
-.mobile-reserve, .menu-toggle, .mobile-action-bar { display: none; }
+.mobile-reserve, .menu-toggle, .menu-scrim, .mobile-menu-meta, .mobile-action-bar { display: none; }
 
 .hero { position: relative; min-height: min(900px, 100svh); margin-top: var(--header-height); overflow: hidden; color: #fff; background: var(--wine-dark); isolation: isolate; }
 .hero-photo, .hero-overlay { position: absolute; inset: 0; width: 100%; height: 100%; }
@@ -267,19 +267,26 @@ footer { padding: 75px 7vw 28px; color: #fff; background: var(--wine-dark); }
 }
 
 @media (max-width: 980px) {
-  :root { --header-height: 74px; }
-  .site-header { grid-template-columns: 1fr auto; gap: 12px; padding: 0 20px; }
-  .brand-logo { position: relative; z-index: 92; width: 150px; }
+  :root { --header-height: 64px; }
+  .site-header { grid-template-columns: 1fr auto; gap: 12px; padding: 0 16px; background: var(--ivory); backdrop-filter: none; }
+  .brand-logo { position: relative; z-index: 92; width: 122px; }
   .header-cta { display: none; }
-  .menu-toggle { position: relative; z-index: 92; display: grid; gap: 7px; width: 44px; height: 44px; place-content: center; border: 0; background: transparent; cursor: pointer; }
-  .menu-toggle span { display: block; width: 25px; height: 2px; background: var(--wine); transition: transform .25s ease; }
+  .menu-toggle { position: relative; z-index: 92; display: grid; gap: 7px; width: 40px; height: 40px; place-content: center; border: 1px solid rgba(104,20,26,.22); border-radius: 50%; background: rgba(104,20,26,.03); cursor: pointer; }
+  .menu-toggle:focus-visible { outline: 0; box-shadow: 0 0 0 2px var(--gold); }
+  .menu-toggle span { display: block; width: 21px; height: 2px; background: var(--wine); transition: transform .25s ease; }
   .menu-toggle.open span:first-child { transform: translateY(4.5px) rotate(45deg); }
   .menu-toggle.open span:last-child { transform: translateY(-4.5px) rotate(-45deg); }
-  .nav-links { position: fixed; z-index: 91; top: var(--header-height); right: 0; bottom: 0; left: 0; display: flex; align-items: stretch; justify-content: flex-start; flex-direction: column; gap: 0; padding: 14px 20px calc(28px + env(safe-area-inset-bottom)); overflow-y: auto; overscroll-behavior: contain; color: #fff; border-top: 1px solid rgba(104,20,26,.18); background: rgba(38,7,9,.99); opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(-8px); transition: opacity .22s ease, transform .22s ease, visibility .22s; }
-  .nav-links.open { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0); }
-  .nav-links a { display: flex; width: 100%; min-height: 50px; align-items: center; padding: 0; border-bottom: 1px solid rgba(255,255,255,.13); font-family: Georgia, serif; font-size: 18px; font-weight: 400; letter-spacing: -.01em; text-transform: none; }
+  .menu-scrim { position: fixed; z-index: 90; top: var(--header-height); right: 0; bottom: 0; left: 0; display: block; border: 0; background: rgba(18,4,5,.58); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .24s ease, visibility .24s; }
+  .menu-scrim.open { opacity: 1; visibility: visible; pointer-events: auto; }
+  .nav-links { position: fixed; z-index: 91; top: var(--header-height); right: 0; bottom: 0; left: auto; display: flex; width: min(88vw, 370px); align-items: stretch; justify-content: flex-start; flex-direction: column; gap: 0; padding: 18px 22px calc(26px + env(safe-area-inset-bottom)); overflow-y: auto; overscroll-behavior: contain; color: #fff; border-top: 1px solid rgba(104,20,26,.18); background: rgba(38,7,9,.99); box-shadow: -24px 0 60px rgba(18,4,5,.28); opacity: 0; visibility: hidden; pointer-events: none; transform: translateX(100%); transition: opacity .24s ease, transform .28s ease, visibility .24s; }
+  .nav-links.open { opacity: 1; visibility: visible; pointer-events: auto; transform: translateX(0); }
+  .mobile-menu-meta { display: flex; min-height: 54px; align-items: center; justify-content: space-between; gap: 18px; border-bottom: 1px solid rgba(255,255,255,.22); }
+  .mobile-menu-meta span { color: #efc57f; font-size: 9px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+  .mobile-menu-meta small { color: rgba(255,255,255,.52); font-family: Georgia, serif; font-size: 11px; }
+  .nav-links a { display: flex; width: 100%; min-height: 49px; align-items: center; padding: 0; border-bottom: 1px solid rgba(255,255,255,.13); font-family: Georgia, serif; font-size: 17px; font-weight: 400; letter-spacing: -.01em; text-transform: none; transition: color .2s ease, padding .2s ease, background .2s ease; }
   .nav-links a::after { display: none; }
-  .mobile-reserve { display: inline-flex; width: 100%; min-height: 52px; align-items: center; justify-content: center; margin-top: 20px; }
+  .nav-links a:focus-visible { padding-left: 12px; outline: 0; color: #efc57f; background: rgba(255,255,255,.05); box-shadow: inset 3px 0 0 var(--gold); }
+  .mobile-reserve { display: inline-flex; width: 100%; min-height: 50px; align-items: center; justify-content: center; margin-top: 18px; color: var(--wine-dark); background: var(--gold); }
   .hero-copy { width: min(700px, 78vw); padding-left: 6vw; }
   .hero-character { right: -7vw; width: 300px; opacity: .6; }
   .heritage { grid-template-columns: 1fr; }
@@ -376,9 +383,9 @@ footer { padding: 75px 7vw 28px; color: #fff; background: var(--wine-dark); }
 }
 
 @media (max-width: 390px) {
-  .site-header { padding-inline: 16px; }
-  .brand-logo { width: 142px; }
-  .nav-links { padding-inline: 16px; }
+  .site-header { padding-inline: 14px; }
+  .brand-logo { width: 116px; }
+  .nav-links { width: 92vw; padding-inline: 18px; }
   .hero h1 { font-size: 47px; }
   .hero-copy { padding-left: 18px; padding-right: 18px; }
   .hero-facts > div { padding-inline: 18px; }

@@ -53,6 +53,8 @@ test("mantém integrações, acervo e requisitos de conversão", async () => {
   assert.match(page, /Diariamente, das 18h às 23h/);
   assert.match(page, /20250130 · 092926/);
   assert.match(page, /aria-label="Ações rápidas"/);
+  assert.match(page, /className=\{menuOpen \? "menu-scrim open" : "menu-scrim"\}/);
+  assert.match(page, /className="mobile-menu-meta"/);
   assert.doesNotMatch(page, /↗|<Arrow/);
   assert.doesNotMatch(page, /PRÉVIA INTERATIVA|dados ilustrativos/i);
   assert.ok((page.match(/~mv2/g) ?? []).length >= 30);
