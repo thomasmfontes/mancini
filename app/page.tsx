@@ -105,14 +105,49 @@ const houses = [
 ];
 
 function GalleryRail({ images, label, tone = "light" }: { images: ArchiveImage[]; label: string; tone?: "light" | "dark" }) {
+  const railRef = useRef<HTMLDivElement>(null);
+  const [railLimits, setRailLimits] = useState({ canPrevious: false, canNext: true });
+
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail) return;
+    const updateLimits = () => {
+      const maxScroll = Math.max(0, rail.scrollWidth - rail.clientWidth);
+      setRailLimits({ canPrevious: rail.scrollLeft > 4, canNext: rail.scrollLeft < maxScroll - 4 });
+    };
+    updateLimits();
+    rail.addEventListener("scroll", updateLimits, { passive: true });
+    const observer = new ResizeObserver(updateLimits);
+    observer.observe(rail);
+    return () => {
+      rail.removeEventListener("scroll", updateLimits);
+      observer.disconnect();
+    };
+  }, [images.length]);
+
+  function moveRail(direction: -1 | 1) {
+    const rail = railRef.current;
+    const card = rail?.querySelector<HTMLElement>(".archive-card");
+    if (!rail || !card) return;
+    const gap = Number.parseFloat(window.getComputedStyle(rail).columnGap) || 14;
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+    rail.scrollBy({ left: direction * (card.getBoundingClientRect().width + gap), behavior });
+  }
+
   return (
-    <div className={`archive-rail ${tone}`} role="region" aria-label={label} tabIndex={0}>
-      {images.map((image, index) => (
-        <figure className="archive-card" key={image.src}>
-          <img src={image.src} alt={image.alt} width="1500" height="1050" loading="lazy" />
-          <figcaption><span>{String(index + 1).padStart(2, "0")}</span>{image.caption}</figcaption>
-        </figure>
-      ))}
+    <div className={`rail-shell ${tone}`}>
+      <div className={`archive-rail ${tone}`} role="region" aria-label={label} tabIndex={0} ref={railRef}>
+        {images.map((image, index) => (
+          <figure className="archive-card" key={image.src}>
+            <img src={image.src} alt={image.alt} width="1500" height="1050" loading="lazy" />
+            <figcaption><span>{String(index + 1).padStart(2, "0")}</span>{image.caption}</figcaption>
+          </figure>
+        ))}
+      </div>
+      <div className="rail-controls" aria-label={`Controles de ${label}`}>
+        <button type="button" onClick={() => moveRail(-1)} disabled={!railLimits.canPrevious} aria-label={`Anterior em ${label}`}>‹</button>
+        <button type="button" onClick={() => moveRail(1)} disabled={!railLimits.canNext} aria-label={`Próximo em ${label}`}>›</button>
+      </div>
     </div>
   );
 }
@@ -367,7 +402,7 @@ export default function Home() {
             <small>O ritual que antecede massas clássicas e pratos para compartilhar.</small>
             <a href={MENU_URL} target="_blank" rel="noreferrer">Cardápio completo</a>
           </div>
-          <div className="archive-heading"><span>Acervo gastronômico</span><small>Deslize para explorar</small></div>
+          <div className="archive-heading"><span>Acervo gastronômico</span><small>Navegue pelo acervo</small></div>
           <GalleryRail images={famigliaArchive} label="Galeria gastronômica da Famiglia Mancini" />
           <div className="contact-line">
             <span><small>Endereço</small>R. Avanhandava, 81</span>

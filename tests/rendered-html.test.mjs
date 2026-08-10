@@ -58,6 +58,8 @@ test("mantém integrações, acervo e requisitos de conversão", async () => {
   assert.match(page, /aria-label="Ações rápidas"/);
   assert.match(page, /className=\{menuOpen \? "menu-scrim open" : "menu-scrim"\}/);
   assert.match(page, /className="mobile-menu-meta"/);
+  assert.match(page, /className="rail-controls"/);
+  assert.match(page, /rail\.scrollBy/);
   assert.doesNotMatch(page, /↗|<Arrow/);
   assert.doesNotMatch(page, /PRÉVIA INTERATIVA|dados ilustrativos/i);
   assert.ok((page.match(/~mv2/g) ?? []).length >= 30);
