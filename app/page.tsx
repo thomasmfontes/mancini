@@ -455,7 +455,7 @@ export default function Home() {
             <div><p className="eyebrow">Além da mesa</p><h2>Mais motivos para<br /><em>celebrar.</em></h2></div>
             <p>Eventos, presentes e a pizza da Avanhandava também fazem parte do acervo da Famiglia.</p>
           </div>
-          <div className="experience-grid">
+          <div className="experience-grid" role="region" aria-label="Experiências da Famiglia Mancini" tabIndex={0}>
             <article className="experience-card event-experience">
               <img src={streetArchive[4].src} width="1800" height="1200" alt="Celebração na Rua Avanhandava" loading="lazy" />
               <div><span>Eventos</span><h3>Faça seu evento na Avanhandava</h3><p>Celebre momentos especiais em um dos endereços mais charmosos de São Paulo. Seja casamento, aniversário, confraternização ou eventos corporativos, o Grupo Mancini conta com o ambiente ideal para a sua ocasião.</p><a href={`mailto:${RESERVATION_EMAIL}?subject=Evento na Avanhandava`}>Planejar evento</a></div>
@@ -485,7 +485,7 @@ export default function Home() {
               <a href="tel:+551131516477"><small>Telefone</small>(11) 3151-6477</a>
             </div>
           </div>
-          <div className="art-mosaic" aria-label="Galeria virtual Calligraphia">
+          <div className="art-mosaic" role="region" aria-label="Galeria virtual Calligraphia" tabIndex={0}>
             {artArchive.map((image, index) => (
               <figure key={image.src}>
                 <img src={image.src} width="900" height="1200" alt={image.alt} loading="lazy" />

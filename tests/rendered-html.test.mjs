@@ -41,6 +41,9 @@ test("mantém integrações, acervo e requisitos de conversão", async () => {
   assert.match(css, /prefers-reduced-motion/);
   assert.match(css, /\.nav-links \{[^}]*top: var\(--header-height\)[^}]*overflow-y: auto/s);
   assert.match(css, /\.mobile-action-bar \{/);
+  assert.match(css, /scrollbar-width: none/);
+  assert.match(css, /::-webkit-scrollbar/);
+  assert.doesNotMatch(css, /scrollbar-color/);
   assert.match(page, /reservas@famigliamancini\.com\.br/);
   assert.match(page, /\(11\) 3255-6599/);
   assert.match(page, /ChIJfadx80xYzpQRyHnuTnmQmDA/);
