@@ -104,10 +104,6 @@ const houses = [
   },
 ];
 
-function Arrow() {
-  return <span aria-hidden="true">↗</span>;
-}
-
 function GalleryRail({ images, label, tone = "light" }: { images: ArchiveImage[]; label: string; tone?: "light" | "dark" }) {
   return (
     <div className={`archive-rail ${tone}`} role="region" aria-label={label} tabIndex={0}>
@@ -146,6 +142,8 @@ export default function Home() {
   const successRef = useRef<HTMLHeadingElement>(null);
   const dialogRef = useRef<HTMLElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const menuRef = useRef<HTMLElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const id = window.setInterval(() => setClock(new Date()), 30000);
@@ -155,13 +153,23 @@ export default function Home() {
   useEffect(() => {
     if (!menuOpen) return;
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setMenuOpen(false);
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+        window.requestAnimationFrame(() => menuButtonRef.current?.focus());
+      }
     };
+    const closeOnDesktop = () => {
+      if (window.innerWidth > 980) setMenuOpen(false);
+    };
+    const focusFrame = window.requestAnimationFrame(() => menuRef.current?.querySelector<HTMLAnchorElement>("a")?.focus());
     document.body.classList.add("menu-is-open");
     window.addEventListener("keydown", closeOnEscape);
+    window.addEventListener("resize", closeOnDesktop);
     return () => {
+      window.cancelAnimationFrame(focusFrame);
       document.body.classList.remove("menu-is-open");
       window.removeEventListener("keydown", closeOnEscape);
+      window.removeEventListener("resize", closeOnDesktop);
     };
   }, [menuOpen]);
 
@@ -262,7 +270,7 @@ export default function Home() {
         <a className="brand-logo" href="#inicio" aria-label="Famiglia Mancini — início">
           <img src={brand.logo} width="202" height="73" alt="Famiglia Mancini" />
         </a>
-        <nav className={menuOpen ? "nav-links open" : "nav-links"} aria-label="Navegação principal" id="site-navigation">
+        <nav className={menuOpen ? "nav-links open" : "nav-links"} aria-label="Navegação principal" id="site-navigation" ref={menuRef}>
           {[
             ["História", "#historia"],
             ["Trattoria", "#trattoria"],
@@ -278,6 +286,7 @@ export default function Home() {
         </nav>
         <button className="header-cta" type="button" onClick={openReservation}>Reservar mesa</button>
         <button
+          ref={menuButtonRef}
           className={menuOpen ? "menu-toggle open" : "menu-toggle"}
           type="button"
           aria-expanded={menuOpen}
@@ -299,9 +308,9 @@ export default function Home() {
             <h1>A noite começa<br />na <em>Avanhandava.</em></h1>
             <p>Cozinha italiana generosa, música e histórias compartilhadas em um dos endereços mais encantadores de São Paulo.</p>
             <div className="hero-actions">
-              <button className="button button-gold" type="button" onClick={openReservation}>Solicitar reserva <Arrow /></button>
+              <button className="button button-gold" type="button" onClick={openReservation}>Solicitar reserva</button>
               <a className="button button-outline" href="#atendimento">Consultar atendimento</a>
-              <a className="text-link light" href={MENU_URL} target="_blank" rel="noreferrer">Ver cardápio <Arrow /></a>
+              <a className="text-link light" href={MENU_URL} target="_blank" rel="noreferrer">Ver cardápio</a>
             </div>
           </div>
           <div className="hero-facts" aria-label="Informações rápidas">
@@ -343,14 +352,14 @@ export default function Home() {
             <span>Mesa de antepastos</span>
             <strong>Mais de 70 opções</strong>
             <small>O ritual que antecede massas clássicas e pratos para compartilhar.</small>
-            <a href={MENU_URL} target="_blank" rel="noreferrer">Cardápio completo <Arrow /></a>
+            <a href={MENU_URL} target="_blank" rel="noreferrer">Cardápio completo</a>
           </div>
           <div className="archive-heading"><span>Acervo gastronômico</span><small>Deslize para explorar</small></div>
           <GalleryRail images={famigliaArchive} label="Galeria gastronômica da Famiglia Mancini" />
           <div className="contact-line">
             <span><small>Endereço</small>R. Avanhandava, 81</span>
             <a href="tel:+551132564320"><small>Telefone da casa</small>(11) 3256-4320</a>
-            <a href={MENU_URL} target="_blank" rel="noreferrer"><small>Cardápio</small>Abrir PDF <Arrow /></a>
+            <a href={MENU_URL} target="_blank" rel="noreferrer"><small>Cardápio</small>Abrir PDF</a>
           </div>
         </section>
 
@@ -369,7 +378,7 @@ export default function Home() {
                 <p>{house.description}</p>
                 <div className="house-links">
                   <a href={house.phoneHref}>{house.phone}</a>
-                  <a href={house.menu} target="_blank" rel="noreferrer">Ver cardápio <Arrow /></a>
+                  <a href={house.menu} target="_blank" rel="noreferrer">Ver cardápio</a>
                 </div>
                 <address>{house.address}</address>
               </div>
@@ -405,14 +414,14 @@ export default function Home() {
                 <strong>{party}<small>{party === 1 ? " pessoa" : " pessoas"}</small></strong>
                 <button type="button" onClick={() => setParty(Math.min(12, party + 1))} aria-label="Aumentar número de pessoas">+</button>
               </div>
-              <a className="button button-wine" href="tel:+551132556599">Ligar e consultar <Arrow /></a>
+              <a className="button button-wine" href="tel:+551132556599">Ligar e consultar</a>
               <p className="honesty-note">A estimativa de espera depende da operação da casa e é confirmada por telefone.</p>
             </article>
             <article className="reservation-card">
               <span>Reserva de mesas</span>
               <h3>Prepare sua solicitação.</h3>
               <p>Informe data, horário e número de pessoas. A reserva será confirmada somente após o retorno da equipe.</p>
-              <button className="button button-gold" type="button" onClick={openReservation}>Solicitar reserva <Arrow /></button>
+              <button className="button button-gold" type="button" onClick={openReservation}>Solicitar reserva</button>
               <div className="reservation-direct">
                 <a href={`mailto:${RESERVATION_EMAIL}`}>{RESERVATION_EMAIL}</a>
                 <a href="tel:+551132556599">{RESERVATION_PHONE}</a>
@@ -429,18 +438,18 @@ export default function Home() {
           <div className="experience-grid">
             <article className="experience-card event-experience">
               <img src={streetArchive[4].src} width="1800" height="1200" alt="Celebração na Rua Avanhandava" loading="lazy" />
-              <div><span>Eventos</span><h3>Faça seu evento na Avanhandava</h3><p>Celebre momentos especiais em um dos endereços mais charmosos de São Paulo. Seja casamento, aniversário, confraternização ou eventos corporativos, o Grupo Mancini conta com o ambiente ideal para a sua ocasião.</p><a href={`mailto:${RESERVATION_EMAIL}?subject=Evento na Avanhandava`}>Planejar evento <Arrow /></a></div>
+              <div><span>Eventos</span><h3>Faça seu evento na Avanhandava</h3><p>Celebre momentos especiais em um dos endereços mais charmosos de São Paulo. Seja casamento, aniversário, confraternização ou eventos corporativos, o Grupo Mancini conta com o ambiente ideal para a sua ocasião.</p><a href={`mailto:${RESERVATION_EMAIL}?subject=Evento na Avanhandava`}>Planejar evento</a></div>
             </article>
             <article className="experience-card gift-experience">
               <img src={brand.gift} width="620" height="500" alt="Gift Card Famiglia Mancini" loading="lazy" />
-              <div><span>Gift Card</span><h3>Presenteie com uma experiência</h3><p>Com o Gift Card Famiglia Mancini, você oferece momentos especiais em nossos restaurantes. Escolha o valor e surpreenda alguém com uma experiência inesquecível na Rua Avanhandava.</p><a href={`mailto:${RESERVATION_EMAIL}?subject=Gift Card Famiglia Mancini`}>Quero presentear <Arrow /></a></div>
+              <div><span>Gift Card</span><h3>Presenteie com uma experiência</h3><p>Com o Gift Card Famiglia Mancini, você oferece momentos especiais em nossos restaurantes. Escolha o valor e surpreenda alguém com uma experiência inesquecível na Rua Avanhandava.</p><a href={`mailto:${RESERVATION_EMAIL}?subject=Gift Card Famiglia Mancini`}>Quero presentear</a></div>
             </article>
             <article className="experience-card delivery-experience">
               <div className="delivery-logos">
                 <img src={brand.delivery} width="331" height="140" alt="Delivery Famiglia Mancini" loading="lazy" />
                 <img src={brand.keeta} width="150" height="144" alt="Keeta" loading="lazy" />
               </div>
-              <div><span>Delivery</span><h3>Deguste nossas pizzas em casa</h3><p>Diariamente, das 18h às 23h.</p><a href={DELIVERY_URL} target="_blank" rel="noreferrer">Pedir pela Keeta <Arrow /></a></div>
+              <div><span>Delivery</span><h3>Deguste nossas pizzas em casa</h3><p>Diariamente, das 18h às 23h.</p><a href={DELIVERY_URL} target="_blank" rel="noreferrer">Pedir pela Keeta</a></div>
             </article>
           </div>
         </section>
@@ -478,7 +487,7 @@ export default function Home() {
               <small>Horários sujeitos a alteração em feriados.</small>
             </div>
             <div className="visit-actions">
-              <a className="button button-wine" href={MAP_URL} target="_blank" rel="noreferrer">Traçar rota <Arrow /></a>
+              <a className="button button-wine" href={MAP_URL} target="_blank" rel="noreferrer">Traçar rota</a>
               <a href="tel:+551132556599">Reservas: {RESERVATION_PHONE}</a>
             </div>
           </div>
@@ -489,7 +498,7 @@ export default function Home() {
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             />
-            <a href={MAP_URL} target="_blank" rel="noreferrer">Abrir no Google Maps <Arrow /></a>
+            <a href={MAP_URL} target="_blank" rel="noreferrer">Abrir no Google Maps</a>
           </div>
         </section>
       </div>
@@ -501,10 +510,15 @@ export default function Home() {
         </div>
         <div className="footer-contacts">
           <div><small>Reservas e informações</small><a href={`mailto:${RESERVATION_EMAIL}`}>{RESERVATION_EMAIL}</a><a href="tel:+551132556599">{RESERVATION_PHONE}</a></div>
-          <div><small>Siga a Famiglia</small><a href="https://www.instagram.com/famigliamancini_oficial" target="_blank" rel="noreferrer">Instagram <Arrow /></a><a href="https://www.tiktok.com/@famigliamancini" target="_blank" rel="noreferrer">TikTok <Arrow /></a></div>
+          <div><small>Siga a Famiglia</small><a href="https://www.instagram.com/famigliamancini_oficial" target="_blank" rel="noreferrer">Instagram</a><a href="https://www.tiktok.com/@famigliamancini" target="_blank" rel="noreferrer">TikTok</a></div>
         </div>
         <div className="footer-bottom"><span>© {new Date().getFullYear()} Famiglia Mancini</span><a href="https://www.famigliamancini.com.br/transpar%C3%AAncia" target="_blank" rel="noreferrer">Transparência e Igualdade</a></div>
       </footer>
+
+      <nav className="mobile-action-bar" aria-label="Ações rápidas">
+        <button type="button" onClick={openReservation}>Reservar</button>
+        <a href="tel:+551132556599">Ligar</a>
+      </nav>
 
       {reserveOpen && (
         <div className="modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && closeReservation()}>
@@ -526,7 +540,7 @@ export default function Home() {
                     <label>Telefone<input name="phone" required type="tel" autoComplete="tel" placeholder="(11) 99999-9999" /></label>
                   </div>
                   <label>E-mail<input name="email" required type="email" autoComplete="email" placeholder="voce@email.com" /></label>
-                  <button className="button button-wine" type="submit">Preparar e-mail de reserva <Arrow /></button>
+                  <button className="button button-wine" type="submit">Preparar e-mail de reserva</button>
                 </form>
               </>
             ) : (
@@ -535,7 +549,7 @@ export default function Home() {
                 <p className="eyebrow">Solicitação pronta</p>
                 <h2 ref={successRef} tabIndex={-1}>Último passo</h2>
                 <p>Abra seu aplicativo de e-mail e envie a mensagem preparada. A reserva será confirmada após o retorno da equipe.</p>
-                <a className="button button-wine" href={reservationLink}>Abrir e-mail preenchido <Arrow /></a>
+                <a className="button button-wine" href={reservationLink}>Abrir e-mail preenchido</a>
                 <a href="tel:+551132556599">ou ligue {RESERVATION_PHONE}</a>
               </div>
             )}

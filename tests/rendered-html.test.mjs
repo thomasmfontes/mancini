@@ -39,6 +39,8 @@ test("mantém integrações, acervo e requisitos de conversão", async () => {
   assert.match(css, /@import "tailwindcss"/);
   assert.match(css, /@media \(max-width: 720px\)/);
   assert.match(css, /prefers-reduced-motion/);
+  assert.match(css, /\.nav-links \{[^}]*top: var\(--header-height\)[^}]*overflow-y: auto/s);
+  assert.match(css, /\.mobile-action-bar \{/);
   assert.match(page, /reservas@famigliamancini\.com\.br/);
   assert.match(page, /\(11\) 3255-6599/);
   assert.match(page, /ChIJfadx80xYzpQRyHnuTnmQmDA/);
@@ -48,6 +50,8 @@ test("mantém integrações, acervo e requisitos de conversão", async () => {
   assert.match(page, /Deguste nossas pizzas em casa/);
   assert.match(page, /Diariamente, das 18h às 23h/);
   assert.match(page, /20250130 · 092926/);
+  assert.match(page, /aria-label="Ações rápidas"/);
+  assert.doesNotMatch(page, /↗|<Arrow/);
   assert.doesNotMatch(page, /PRÉVIA INTERATIVA|dados ilustrativos/i);
   assert.ok((page.match(/~mv2/g) ?? []).length >= 30);
   assert.match(layout, /Famiglia Mancini — Desde 1980 na Rua Avanhandava/);
