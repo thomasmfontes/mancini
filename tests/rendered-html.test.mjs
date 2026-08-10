@@ -20,8 +20,8 @@ test("renderiza a proposta completa da Famiglia Mancini", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /Famiglia Mancini Trattoria \| Rua Avanhandava/i);
-  assert.match(html, /Uma noite/);
+  assert.match(html, /Famiglia Mancini Trattoria \| Desde 1980 na Rua Avanhandava/i);
+  assert.match(html, /A noite começa/);
   assert.match(html, /Avanhandava/);
   assert.match(html, /Mesa de antepastos/);
   assert.match(html, /Calligraphia/);
@@ -37,13 +37,19 @@ test("mantém integrações, acervo e requisitos de conversão", async () => {
   ]);
 
   assert.match(css, /@import "tailwindcss"/);
-  assert.match(css, /@media \(max-width: 760px\)/);
+  assert.match(css, /@media \(max-width: 720px\)/);
   assert.match(css, /prefers-reduced-motion/);
   assert.match(page, /reservas@famigliamancini\.com\.br/);
   assert.match(page, /\(11\) 3255-6599/);
   assert.match(page, /ChIJfadx80xYzpQRyHnuTnmQmDA/);
   assert.match(page, /12607344\.pdf/);
-  assert.match(page, /PRÉVIA INTERATIVA/);
-  assert.match(page, /Demonstração com dados ilustrativos/);
-  assert.match(layout, /Famiglia Mancini — Uma noite na Avanhandava/);
+  assert.match(page, /AGORA EM SÃO PAULO/);
+  assert.match(page, /A estimativa de espera depende da operação da casa/);
+  assert.match(page, /Deguste nossas pizzas em casa/);
+  assert.match(page, /Diariamente, das 18h às 23h/);
+  assert.match(page, /20250130 · 092926/);
+  assert.doesNotMatch(page, /PRÉVIA INTERATIVA|dados ilustrativos/i);
+  assert.ok((page.match(/~mv2/g) ?? []).length >= 30);
+  assert.match(layout, /Famiglia Mancini — Desde 1980 na Rua Avanhandava/);
+  assert.match(layout, /og-v3\.png/);
 });
