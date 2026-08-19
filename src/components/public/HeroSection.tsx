@@ -25,6 +25,7 @@ export function HeroSection({ service, onOpenReservation }: HeroSectionProps) {
         fetchPriority="high"
       />
       <div className="hero-overlay" />
+
       <img
         className="hero-character"
         src={brand.pulcinella}
@@ -32,6 +33,7 @@ export function HeroSection({ service, onOpenReservation }: HeroSectionProps) {
         height="439"
         alt="Pulcinella, personagem histórico da Famiglia Mancini"
       />
+
       <div className="hero-copy">
         <p className="eyebrow light">BENVENUTTI! · {t.hero.tagline.toUpperCase()}</p>
         <h1>
@@ -58,25 +60,28 @@ export function HeroSection({ service, onOpenReservation }: HeroSectionProps) {
           </a>
         </div>
       </div>
+
       <div className="hero-facts" aria-label="Informações rápidas">
-        <div>
-          <small>{t.service.liveStatusTitle}</small>
-          <strong>
-            <i className={service.isOpen ? "status-dot" : "status-dot closed"} />
-            {service.isOpen
-              ? `${language === "pt" ? "Aberto até" : "Open until"} ${service.closingLabel}`
-              : language === "pt"
-                ? "Fechado agora"
-                : "Closed now"}
-          </strong>
-        </div>
-        <div>
-          <small>{t.visit.addressTitle}</small>
-          <strong>R. Avanhandava, 81</strong>
-        </div>
-        <div>
-          <small>{t.footer.reservationsTitle}</small>
-          <a href="tel:+551132556599">{RESERVATION_PHONE}</a>
+        <div className="hero-facts-inner">
+          <div>
+            <small>{t.service.liveStatusTitle}</small>
+            <strong>
+              <i className={service.isOpen ? "status-dot" : "status-dot closed"} />
+              {service.isOpen
+                ? `${language === "pt" ? "Aberto até" : "Open until"} ${service.closingLabel}`
+                : language === "pt"
+                  ? "Fechado agora"
+                  : "Closed now"}
+            </strong>
+          </div>
+          <div>
+            <small>{t.visit.addressTitle}</small>
+            <strong>R. Avanhandava, 81</strong>
+          </div>
+          <div>
+            <small>{t.footer.reservationsTitle}</small>
+            <a href="tel:+551132556599">{RESERVATION_PHONE}</a>
+          </div>
         </div>
       </div>
     </section>
