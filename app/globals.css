@@ -507,7 +507,7 @@ footer { padding: 44px var(--content-padding-x) 24px; color: #fff; background: v
     width: 100%;
     max-width: 640px;
     margin-inline: auto;
-    padding: clamp(24px, 4vh, 36px) clamp(16px, 4vw, 24px) clamp(110px, 16vh, 145px);
+    padding: clamp(20px, 3vh, 36px) clamp(16px, 4vw, 24px) clamp(170px, 25vh, 240px);
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -545,21 +545,29 @@ footer { padding: 44px var(--content-padding-x) 24px; color: #fff; background: v
     left: 0;
     right: 0;
     margin-inline: auto;
-    bottom: 64px;
-    width: clamp(150px, 35vw, 200px);
-    max-height: 230px;
+    bottom: 70px;
+    height: clamp(160px, 24vh, 225px);
+    width: auto;
+    max-width: min(200px, 50vw);
+    object-fit: contain;
     opacity: .95;
-    filter: drop-shadow(0 16px 32px rgba(0,0,0,.75));
+    filter: drop-shadow(0 14px 28px rgba(0,0,0,.75));
     pointer-events: none;
-    z-index: 1;
+    z-index: 2;
+  }
+  .hero-facts {
+    height: 70px;
+    min-height: 70px;
   }
   .hero-facts-inner {
     grid-template-columns: repeat(3, 1fr);
+    height: 70px;
     padding: 0 clamp(12px, 2.5vw, 20px);
   }
   .hero-facts-inner > div {
-    min-height: 62px;
-    padding: 8px 10px;
+    height: 70px;
+    min-height: 70px;
+    padding: 6px 10px;
     align-items: center;
     text-align: center;
   }
@@ -607,15 +615,21 @@ footer { padding: 44px var(--content-padding-x) 24px; color: #fff; background: v
   /* Hero Action Grid on Smaller Screens */
   .hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 380px; margin-top: 22px; }
   .hero-actions .button-gold { grid-column: 1 / -1; width: 100%; }
-  .hero-actions .button-outline, .hero-actions .text-link { min-height: 44px; align-items: center; justify-content: center; padding: 0 10px; border: 1px solid rgba(255,255,255,.45); font-size: 9px; letter-spacing: .1em; text-align: center; }
+  .hero-actions .button-outline, .hero-actions .text-link { min-height: 44px; align-items: center; justify-content: center; padding: 0 10px; border: 1px solid rgba(255,255,255,.45); border-radius: 6px; font-size: 9px; letter-spacing: .1em; text-align: center; }
   
   .hero-character {
-    width: clamp(145px, 40vw, 190px);
-    max-height: 220px;
+    bottom: 70px;
+    height: clamp(160px, 24vh, 220px);
+    width: auto;
+    max-width: min(190px, 50vw);
   }
   
-  .hero-facts-inner { grid-template-columns: 1fr 1fr; padding: 0 14px; }
-  .hero-facts-inner > div { min-height: 58px; padding: 8px 10px; }
+  .hero-facts {
+    height: 70px;
+    min-height: 70px;
+  }
+  .hero-facts-inner { grid-template-columns: 1fr 1fr; height: 70px; padding: 0 14px; }
+  .hero-facts-inner > div { height: 70px; min-height: 70px; padding: 6px 10px; }
   .hero-facts-inner > div:nth-child(2) { border-right: 0; }
   .hero-facts-inner > div:last-child { display: none; }
   .hero-facts-inner strong, .hero-facts-inner a { font-size: 12px; }
