@@ -656,10 +656,184 @@ footer { padding: 44px var(--content-padding-x) 24px; color: #fff; background: v
   .reservation-direct { flex-direction: column; }
 
   /* Experiences Mobile */
-  .experience-grid { grid-auto-flow: column; grid-auto-columns: minmax(260px, 82vw); overflow-x: auto; padding-bottom: 4px; scroll-snap-type: inline mandatory; scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; }
-  .experience-card { min-height: 380px; height: 380px; scroll-snap-align: start; }
-  .experience-card > div:last-child { left: 16px; right: 16px; bottom: 18px; }
-  .event-experience { grid-column: auto; min-height: 380px; }
+  .experience-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-x: visible;
+  }
+  .experience-card {
+    min-height: auto;
+    height: auto;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  
+  /* 1. Event Experience */
+  .event-experience {
+    position: relative;
+    min-height: 340px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 24px 20px;
+  }
+  .event-experience > img:first-child {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .event-experience::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgba(22,4,6,.96) 0%, rgba(22,4,6,.75) 55%, rgba(22,4,6,.15) 100%);
+  }
+  .event-experience > div:last-child {
+    position: relative;
+    z-index: 2;
+    left: auto;
+    right: auto;
+    bottom: auto;
+  }
+  .event-experience h3 {
+    font-size: clamp(21px, 5.5vw, 26px);
+    margin: 6px 0 10px;
+  }
+  .event-experience p {
+    font-size: 13.5px;
+    line-height: 1.55;
+    margin-bottom: 14px;
+    color: rgba(255,255,255,.88);
+  }
+  .event-experience a {
+    display: inline-flex;
+    align-items: center;
+    color: var(--gold);
+    border-bottom: 1px solid var(--gold);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    padding-bottom: 3px;
+  }
+
+  /* 2. Gift Card Experience */
+  .gift-experience {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: #e8dccb;
+    border: 1px solid rgba(104,20,26,.12);
+    padding: 24px 20px;
+  }
+  .gift-experience::after {
+    display: none;
+  }
+  .gift-experience > img:first-child {
+    position: static;
+    width: min(200px, 65%);
+    height: auto;
+    max-height: 120px;
+    object-fit: contain;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0,0,0,.08);
+  }
+  .gift-experience > div:last-child {
+    position: static;
+    color: var(--ink);
+  }
+  .gift-experience span {
+    color: var(--red);
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: .14em;
+  }
+  .gift-experience h3 {
+    color: var(--wine-dark);
+    font-size: clamp(20px, 5vw, 24px);
+    margin: 6px 0 10px;
+  }
+  .gift-experience p {
+    color: var(--muted);
+    font-size: 13.5px;
+    line-height: 1.55;
+    margin-bottom: 14px;
+  }
+  .gift-experience a {
+    display: inline-flex;
+    align-items: center;
+    color: var(--wine);
+    border-bottom: 1px solid var(--wine);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    padding-bottom: 3px;
+  }
+
+  /* 3. Delivery Experience */
+  .delivery-experience {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--forest);
+    padding: 24px 20px;
+    border: 1px solid rgba(255,255,255,.1);
+  }
+  .delivery-experience .delivery-logos {
+    position: static;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
+    min-height: auto;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255,255,255,.18);
+  }
+  .delivery-experience .delivery-logos img:first-child {
+    width: auto;
+    max-width: 140px;
+    max-height: 48px;
+    filter: brightness(0) invert(1);
+  }
+  .delivery-experience .delivery-logos img:last-child {
+    width: 38px;
+    height: 38px;
+    filter: none;
+  }
+  .delivery-experience > div:last-child {
+    position: static;
+    color: #fff;
+  }
+  .delivery-experience span {
+    color: #efc57f;
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: .14em;
+  }
+  .delivery-experience h3 {
+    font-size: clamp(20px, 5vw, 24px);
+    margin: 6px 0 10px;
+  }
+  .delivery-experience p {
+    color: rgba(255,255,255,.8);
+    font-size: 13.5px;
+    line-height: 1.55;
+    margin-bottom: 14px;
+  }
+  .delivery-experience a {
+    display: inline-flex;
+    align-items: center;
+    color: var(--gold);
+    border-bottom: 1px solid var(--gold);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    padding-bottom: 3px;
+  }
 
   /* Calligraphia Mobile */
   .art-mosaic { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(240px, 80vw); gap: 8px; overflow-x: auto; padding-bottom: 4px; scroll-snap-type: inline mandatory; scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; }
